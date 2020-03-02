@@ -68,12 +68,21 @@ test("测试超时", () => {
     )
 });
 
-test("测试功能", () => {
+test("测试多个异步任务", () => {
     retry(
         () => (
             new Promise((resolve,reject) => {
-                reject(null);
-            }) 
+                resolve("success")
+            }).then(
+                () => (new Promise((resolve,reject) => {
+                    const num = 9*9;
+                    resolve("success")
+                }))
+            ).then(
+                () => (new Promise((resolve,reject) => {
+                    Math.random() < 0.3 ? resolve("success") : reject("error");
+                }))
+            )
         )
     )
 });
